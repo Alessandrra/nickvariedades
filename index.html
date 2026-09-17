@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NICK VARIEDADES | Catálogo</title>
+<style>
+:root{--rose:#a97978;--dark:#181414;--cream:#fffaf8;--gold:#bd9a5a;--line:#eadeda}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--dark);font-family:Arial,sans-serif}
+header{background:linear-gradient(135deg,#181414,#3b2929);color:#fff;text-align:center;padding:28px 16px}
+.logo{width:82px;height:82px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;margin:auto;color:#e6c781;font:700 25px Georgia}
+h1{font:700 30px Georgia;margin:10px 0 5px;letter-spacing:2px}.tag{color:#eadfdb;font-size:13px}
+a{text-decoration:none}.top{display:inline-block;margin-top:14px;background:#fff;color:#181414;padding:11px 17px;border-radius:30px;font-weight:bold;font-size:14px}
+.controls{max-width:1100px;margin:18px auto 0;padding:0 16px;position:sticky;top:0;z-index:3}
+input{width:100%;padding:14px;border:1px solid var(--line);border-radius:14px;font-size:15px;background:#fff}
+.cats{display:flex;gap:8px;overflow:auto;padding:10px 0}.cat{border:1px solid var(--line);background:#fff;border-radius:22px;padding:9px 13px;white-space:nowrap;cursor:pointer}.active{background:var(--dark);color:#fff}
+main{max-width:1100px;margin:auto;padding:0 16px 90px}.title{font:700 23px Georgia;margin:22px 0 13px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}.photo{aspect-ratio:1;background:#f0e6e2;display:grid;place-items:center;text-align:center;color:#a39895;font-size:12px}.photo img{width:100%;height:100%;object-fit:cover}.info{padding:12px}.name{font-weight:bold;font-size:14px}.category{font-size:11px;color:#766d6b;margin-top:4px;text-transform:uppercase}.price{font-weight:bold;font-size:17px;margin:9px 0}.old{font-size:12px;text-decoration:line-through;color:#999;margin-right:5px;font-weight:normal}.btn{display:block;background:var(--rose);color:#fff;text-align:center;padding:10px;border-radius:10px;font-size:13px;font-weight:bold}.empty{text-align:center;color:#766d6b;padding:35px;display:none}
+footer{background:#181414;color:#ddd;text-align:center;padding:28px 16px;font-size:12px}.float{position:fixed;right:18px;bottom:18px;background:#25d366;color:#fff;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:26px;box-shadow:0 5px 18px #0004}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">NV</div><h1>NICK VARIEDADES</h1>
+<div class="tag">Tudo o que você precisa, em um só lugar! ✨</div>
+<a class="top" id="top" href="#">📲 Fale conosco pelo WhatsApp</a>
+</header>
+<div class="controls">
+<input id="search" placeholder="🔎 Procurar produto...">
+<div class="cats">
+<button class="cat active" data-cat="Todos">Todos</button>
+<button class="cat" data-cat="Semijoias">💎 Semijoias</button>
+<button class="cat" data-cat="Perfumes">🌸 Perfumes</button>
+<button class="cat" data-cat="Lingerie">👙 Lingerie</button>
+<button class="cat" data-cat="Romance">❤️ Romance</button>
+<button class="cat" data-cat="Presentes">🎁 Presentes</button>
+<button class="cat" data-cat="Ofertas">🔥 Ofertas</button>
+</div></div>
+<main><div class="title">✨ Nosso catálogo</div><div class="grid" id="grid"></div><div class="empty" id="empty">Nenhum produto encontrado.</div></main>
+<a class="float" id="float" href="#" aria-label="WhatsApp">✆</a>
+<footer><b>NICK VARIEDADES</b><br>Semijoias • Perfumes • Lingerie • Romance • Presentes<br><br>Pedidos e informações pelo WhatsApp.</footer>
+<script>
+const WHATSAPP="5551999999999"; // TROQUE PELO SEU NÚMERO
+
+const produtos=[
+ {nome:"Brinco Dourado",categoria:"Semijoias",preco:"39,90",foto:"",oferta:false},
+ {nome:"Colar Delicado",categoria:"Semijoias",preco:"59,90",foto:"",oferta:false},
+ {nome:"Perfume Feminino",categoria:"Perfumes",preco:"89,90",foto:"",oferta:false},
+ {nome:"Lingerie Especial",categoria:"Lingerie",preco:"69,90",foto:"",oferta:false},
+ {nome:"Produto Romance",categoria:"Romance",preco:"49,90",foto:"",oferta:true},
+ {nome:"Kit Presente",categoria:"Presentes",preco:"99,90",foto:"",oferta:true}
+];
+let cat="Todos";
+const norm=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+function wa(nome,preco){return "https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent('Olá! Vi o produto "'+nome+'" no catálogo da NICK VARIEDADES e gostaria de saber se está disponível. Valor: R$ '+preco+'.')}
+function render(){
+ let q=norm(document.getElementById("search").value.trim());
+ let list=produtos.filter(p=>(cat==="Todos"||p.categoria===cat||(cat==="Ofertas"&&p.oferta))&&(!q||norm(p.nome+" "+p.categoria).includes(q)));
+ document.getElementById("grid").innerHTML=list.map(p=>'<article class="card"><div class="photo">'+(p.foto?'<img src="'+p.foto+'" alt="'+p.nome+'">':'📷<br>Foto do produto')+'</div><div class="info"><div class="name">'+p.nome+'</div><div class="category">'+p.categoria+'</div><div class="price">'+(p.oferta?'<span class="old">R$ 69,90</span>':'')+'R$ '+p.preco+'</div><a class="btn" target="_blank" href="'+wa(p.nome,p.preco)+'">📲 Pedir pelo WhatsApp</a></div></article>').join("");
+ document.getElementById("empty").style.display=list.length?"none":"block";
+}
+document.querySelectorAll(".cat").forEach(b=>b.onclick=()=>{document.querySelectorAll(".cat").forEach(x=>x.classList.remove("active"));b.classList.add("active");cat=b.dataset.cat;render()});
+document.getElementById("search").oninput=render;
+let geral="https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent("Olá! Vim pelo catálogo da NICK VARIEDADES e gostaria de informações.");
+document.getElementById("top").href=geral;document.getElementById("float").href=geral;render();
+</script>
+</body></html>
